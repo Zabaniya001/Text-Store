@@ -4,6 +4,7 @@
 #include <morecolors>
 #include <textstore>
 #include <tf2_stocks>
+#include <freak_fortress_2>
 
 #pragma newdecls required
 
@@ -134,6 +135,9 @@ public void OnDeath(Event event, const char[] name, bool dontBroadcast)
 	if(client==attacker || !IsValidClient(attacker) || IsFakeClient(attacker))
 		return;
 
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	AddCash(attacker, CashKill.IntValue);
 	client = GetClientOfUserId(event.GetInt("assister"));
 	if(IsValidClient(client))
@@ -206,6 +210,9 @@ public void OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if(team!=2 && team!=3)
 		return;
 
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	for(int client=1; client<=MaxClients; client++)
 	{
 		if(IsValidClient(client) && GetClientTeam(client)==team)
@@ -222,6 +229,9 @@ public void OnPointBlock(Event event, const char[] name, bool dontBroadcast)
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
 
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	client = event.GetInt("blocker");
 	if(IsValidClient(client))
 		AddCash(client, CashDefend.IntValue);
@@ -232,6 +242,9 @@ public void OnPointBlock(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnBalance(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = event.GetInt("player");
 	if(IsValidClient(client))
 		AddCash(client, CashBalance.IntValue);
@@ -242,6 +255,9 @@ public void OnBalance(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnDestroy(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
@@ -261,6 +277,9 @@ public void OnDestroy(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnExtinguish(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = event.GetInt("victim");
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
@@ -275,6 +294,9 @@ public void OnExtinguish(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnTeleport(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	if(event.GetFloat("dist") < 400)
 		return;
 
@@ -292,6 +314,9 @@ public void OnTeleport(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnHurt(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int value = CashDamage.IntValue;
 	if(value < 1)
 		return;
@@ -305,13 +330,20 @@ public void OnHurt(Event event, const char[] name, bool dontBroadcast)
 		return;
 
 	static int damage[MAXPLAYERS+1];
-	damage[client] += event.GetInt("damageamount");
+
+	if(event.GetInt("damageamount") >= 1000)
+		damage[client] += 1000;
+	else
+		damage[client] += event.GetInt("damageamount");
+
 	int cash;
+
 	while(damage[client] >= value)
 	{
 		cash++;
 		damage[client] -= value;
 	}
+
 	AddCash(client, cash);
 }
 
@@ -320,6 +352,9 @@ public void OnHurt(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnHeal(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int value = CashHeal.IntValue;
 	if(value < 1)
 		return;
@@ -348,6 +383,9 @@ public void OnHeal(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnBuildingHeal(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int value = CashHeal.IntValue;
 	if(value < 1)
 		return;
@@ -372,6 +410,9 @@ public void OnBuildingHeal(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnRoundPanel(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("player_1"));
 	if(IsValidClient(client))
 		AddCash(client, CashMvp1.IntValue);
@@ -390,6 +431,9 @@ public void OnRoundPanel(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnStun(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("victim"));
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
@@ -404,6 +448,9 @@ public void OnStun(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnEyeball(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = event.GetInt("player_entindex");
 	if(IsValidClient(client))
 		AddCash(client, CashStun.IntValue);
@@ -414,6 +461,9 @@ public void OnEyeball(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnJarate(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = event.GetInt("victim_entindex");
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
@@ -428,6 +478,9 @@ public void OnJarate(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnMedic(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	if(!event.GetBool("charged"))
 		return;
 
@@ -445,6 +498,9 @@ public void OnMedic(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnDeflect(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("ownerid"));
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
@@ -459,6 +515,9 @@ public void OnDeflect(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnBoss(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	for(int client=1; client<=MaxClients; client++)
 	{
 		if(IsValidClient(client))
@@ -471,6 +530,9 @@ public void OnBoss(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnMvM(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	for(int client=1; client<=MaxClients; client++)
 	{
 		if(IsValidClient(client) && !IsFakeClient(client))
@@ -483,6 +545,9 @@ public void OnMvM(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnScore(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+		
 	int client = event.GetInt("player");
 	if(IsValidClient(client))
 		AddCash(client, RoundFloat(event.GetInt("delta")*CashScore.FloatValue));
