@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <morecolors>
 #include <textstore>
+#include <freak_fortress_2>
 
 #pragma newdecls required
 
@@ -47,6 +48,9 @@ public void OnPluginStart()
 */
 public void OnDeath(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return;
@@ -61,6 +65,9 @@ public void OnDeath(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int winner = event.GetInt("winner");
 	int client = GetClientOfUserId(winner);
 	if(IsValidClient(client))
@@ -81,6 +88,9 @@ public void OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnTeamScore(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	float ratio = CashTeamScore.FloatValue;
 	if(!ratio)
 		return;
@@ -108,6 +118,9 @@ public void OnTeamScore(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnScore(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	float ratio = CashScore.FloatValue;
 	if(!ratio)
 		return;
@@ -130,6 +143,9 @@ public void OnScore(Event event, const char[] name, bool dontBroadcast)
 */
 public void OnKill(Event event, const char[] name, bool dontBroadcast)
 {
+	if(!FF2_IsFF2Enabled())
+		return;
+
 	int client = event.GetInt("entindex_attacker");
 	if(IsValidClient(client))
 		AddCash(client, CashEntity.IntValue);
